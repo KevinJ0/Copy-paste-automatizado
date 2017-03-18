@@ -42,7 +42,7 @@ public class Pegar {
 																											// automaticamente
 				
 				System.out.println(bufferdentrada.get(i).available() + " bytes");
-				i++;
+				i--;
 				
 				fuente = iteradorP.next();
 				// System.out.println(archiv.getName());
