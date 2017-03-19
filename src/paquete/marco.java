@@ -26,7 +26,6 @@ public class marco extends JFrame {
 			}
 		});
 	}
-
 	/**
 	 * Create the frame.
 	 */
