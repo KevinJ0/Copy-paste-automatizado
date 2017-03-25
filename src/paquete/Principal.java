@@ -2,48 +2,39 @@ package paquete;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.peer.WindowPeer;
 import java.io.*;
 import java.util.*;
-import javax.swing.UIManager;
+import java.util.Timer;
+
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import nicon.notify.core.Notification;
-import javax.swing.ImageIcon;
-import net.sf.jcarrierpigeon.Notification;
-import net.sf.jcarrierpigeon.NotificationQueue;
-import net.sf.jcarrierpigeon.WindowPosition;
 
 import javax.swing.*;
 
 public class Principal {
 
 	public static void main(String[] args) {
+
+		try {
+			UIManager.setLookAndFeel(new NimbusLookAndFeel());
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		Marco M = new Marco();
 		M.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// nicon.notify.core.Notification.showConfirm("Completado", "Las copias
+		// se han finalizado correctamente",
+		// nicon.notify.core.Notification.NICON_DARK_THEME,
+		// nicon.notify.core.Notification.WEATHER_ICON,
+		// true, 10000);
 
-		 try{
-		     UIManager.setLookAndFeel(new NimbusLookAndFeel());
-		           Notification.showConfirm("Notificacion con NiconNotify","Hola amigos esta es mi notificacion personalizada", Notification,true, 10000);
-		 
-		//El metodo showConfirm() puede variar con esto me refiero a que puedes solo mostrar el mensaje o bien puedes mandar mensaje, el tema que prefieras , si se reproduce un sonido o no y tambien por cuanto tiempo se mostrara, este ultimo es el que muestro en el ejemplo.
-		 
-		        }catch(Exception ex){
-		            System.err.println("error: "+ex.getCause());
-		        }	}
+	}
 
 	static class Marco extends JFrame {
-		private static marcoN mimarcoN; // cuadro de carga en proceso
-		private static marcoNC mimarcoNC = new marcoNC(); // cuadro de carga
-															// completado
+		private static Dimension resolucion = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
 
-		// private static Notification notiC = new Notification(mimarcoNC,
-		// WindowPosition.BOTTOMRIGHT, 0, 0, 1999);
-		private static Notification noti;
-		//private static NotificationQueue mostrarnoti = new NotificationQueue();
+		private static marcoN mimarcoN; // cuadro de carga en proceso
 		private static JPanel lamina4 = new JPanel();
 		private static JPanel lamina3 = new JPanel();
 		private static JPanel lamina2 = new JPanel();
@@ -90,8 +81,7 @@ public class Principal {
 				Lamina_Sur.add(lamina3);
 				Lamina_Sur.add(lamina4);
 				botonEmpezar.setEnabled(true);
-				Notification notiC = new Notification(mimarcoNC, WindowPosition.BOTTOMRIGHT, 0, 0, 2000);
-				notiC.animate();
+
 			} else {
 				botonEmpezar.setEnabled(true);
 			}
@@ -99,7 +89,6 @@ public class Principal {
 		}
 
 		static void verBarraCarga() {
-			// laminaN.remove(0);
 
 			Lamina_Sur.remove(0);
 			Lamina_Sur.remove(0);
@@ -160,13 +149,10 @@ public class Principal {
 		public Marco() {
 			try {
 				mimarcoN = new marcoN();
-
-				noti = new Notification(mimarcoN, WindowPosition.BOTTOMRIGHT, 0, 0, 999999999);
 				barra.setForeground(Color.LIGHT_GRAY);
 				barraN.setForeground(Color.LIGHT_GRAY);
-				ClassTray MiTray = new ClassTray();
+				CreateTray();
 				// setBounds(400, 100, 700, 400);
-
 				setLayout(new BorderLayout());
 				botonEmpezar = new JButton("Empezar");
 				botonEmpezar.addActionListener(new ActionListener() {
@@ -187,12 +173,16 @@ public class Principal {
 										listArchivos = copi.getListFile();
 
 									} else {
+										botonEmpezar.setEnabled(true);
+
 										JOptionPane.showConfirmDialog(null,
 												"El directorio de donde se van a copiar los archivos no puede ser leido",
 												"Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 										break y;
 									}
 								} else {
+									botonEmpezar.setEnabled(true);
+
 									JOptionPane.showConfirmDialog(null,
 											"El directorio de donde se van a copiar los archivos no es valido", "Error",
 											JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -205,42 +195,43 @@ public class Principal {
 										direcP = new File(campoEscogerP.getText().trim());
 										if (direcP.isDirectory()) {
 											if (direcP.canWrite()) {
-												// System.out.println("La
-												// cantidad de : " +
-												// listArchivos);
 												copi.setdirecP(direcP);
 												copi.run();
 
-												// if(!mimarcoN.isVisible())
-												// noti.animate();
-
-												//mostrarnoti.add(noti);
-
 											} else {
+												botonEmpezar.setEnabled(true);
+
 												JOptionPane.showConfirmDialog(null,
 														"El directorio en donde se van a copiar los archivos no puede ser escrito",
 														"Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 											}
 
 										} else {
+											botonEmpezar.setEnabled(true);
+
 											JOptionPane.showConfirmDialog(null,
 													"El directorio en donde se van a copiar los archivos no es valido",
 													"Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 										}
 									}
 								} else {
+									botonEmpezar.setEnabled(true);
+
 									JOptionPane.showConfirmDialog(null,
 											"No se a encontrada ningún archivo con los formatos establecidos",
 											"Informe", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 								}
 							} else {
+								botonEmpezar.setEnabled(true);
+
 								JOptionPane.showConfirmDialog(null,
 										"Debe escoger un directorio en donde se van a copiar los archivos", "Error",
 										JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 							}
 
 						} else {
+							botonEmpezar.setEnabled(true);
 							JOptionPane.showConfirmDialog(null,
 									"Debe escoger un directorio de donde se van a copiar los archivos", "Error",
 									JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -397,7 +388,6 @@ public class Principal {
 				setLocationByPlatform(true);
 				misextenciones.setFormato("mp3");
 				// botonEmpezar.doClick();
-
 				setVisible(true);
 			} catch (Exception e) {
 				JOptionPane.showConfirmDialog(null, "Error al instanciar el marco",
@@ -407,61 +397,61 @@ public class Principal {
 
 			}
 		}
-		static class marcoNC extends JFrame {
 
-			public marcoNC() {
-				
-				addWindowListener(new WindowAdapter() {
-					@Override
-					public void windowOpened(WindowEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void windowIconified(WindowEvent e) {
-
-					}
-
-					@Override
-					public void windowDeiconified(WindowEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void windowDeactivated(WindowEvent e) {
-						// dispose();
-						// noti.end();
-
-					}
-
-					@Override
-					public void windowClosing(WindowEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void windowClosed(WindowEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void windowActivated(WindowEvent e) {
-					}
-				});
-				setBounds(0, 0, 190, 60);
-				this.setUndecorated(true);
-				
+		static class marcoN extends JDialog {
+			void mostrar() {
+				setVisible(true);
+				MiTarea dale = new MiTarea();
+				dale.start();
 			}
 
-		}
+			Timer timer = new Timer(); // El timer que se encarga de administrar
+										// los tiempo de repeticion
+			public int segundos; // manejar el valor del contador
+			public boolean frozen; // manejar el estado del contador TIMER
+									// AUTOMATICO -- True Detenido | False
+									// Corriendo
 
-		static class marcoN extends JFrame {
+			// clase interna que representa una tarea, se puede crear varias
+			// tareas y asignarle al timer luego
+			class MiTarea extends Thread {
+				public void run() {
+					boolean salir = false;
+
+					// while (!salir) {
+					getParent().setVisible(true);
+					try {
+						sleep(600);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					getParent().setBounds(resolucion.width - 199 , resolucion.height - 170,190,60);
+
+					for (int i = 0; i < getParent().getWidth(); i++) {
+						 System.out.println(i);
+
+						getParent().setBounds(resolucion.width - 444 - i, resolucion.height - 170,190,60);
+						
+						try {
+							sleep(100);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					salir = true;
+					// }
+				}// end run()
+			}// end SincronizacionAutomatica
 
 			public marcoN() {
+				System.out.println(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+
+				setFocusable(true);
+				setResizable(false);
+
 				addWindowListener(new WindowAdapter() {
 
 					@Override
@@ -504,10 +494,9 @@ public class Principal {
 					public void windowActivated(WindowEvent e) {
 					}
 				});
-				setBounds(0, 0, 190, 60);
+				setBounds(resolucion.width - 444, resolucion.height - 170, 190, 60);
 				this.setUndecorated(true);
-				// barraN.setBounds(0, 0, 199, 25);
-				barraN.setPreferredSize(new Dimension(164, 16));
+				barraN.setPreferredSize(new Dimension(164, 19));
 
 				Font mifont = new Font("Arial", 0, 11);
 				JButton minimizar = new JButton("Minimizar");
@@ -532,73 +521,75 @@ public class Principal {
 				laminaN.add(laminabarraN, BorderLayout.CENTER);
 				laminaN.add(laminasur, BorderLayout.SOUTH);
 				add(laminaN);
+				pack();
 			}
 
 		}
 
-		class ClassTray {
-			public ClassTray() {
-
-				if (!SystemTray.isSupported()) {
-					System.out.println("SystemTray no es soportado");
-					return;
-				}
-
-				final PopupMenu popup = new PopupMenu();
-
-				final TrayIcon trayIcon = new TrayIcon(new ImageIcon("src//paquete//exit.png").getImage());
-				final SystemTray tray = SystemTray.getSystemTray();
-
-				// Create a pop-up menu components
-				CheckboxMenuItem setStart = new CheckboxMenuItem("Añadir al inicio del sistema");
-				MenuItem showItem = new MenuItem("Mostrar");
-				MenuItem exitItem = new MenuItem("Salir");
-
-				showItem.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setVisible(true);
-						setState(JFrame.NORMAL); // lo trae al frente
-					}
-				});
-				exitItem.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						System.exit(0);
-					}
-				});
-				// Add components to pop-up menu
-				popup.add(showItem);
-				popup.addSeparator();
-				popup.add(setStart);
-				popup.addSeparator();
-				popup.add(exitItem);
-				trayIcon.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						setVisible(true);
-						setState(JFrame.NORMAL); // lo trae al frente
-
-					}
-				});
-				trayIcon.setPopupMenu(popup);
-
-				try {
-					tray.add(trayIcon);
-				} catch (AWTException e) {
-					System.out.println("TrayIcon could not be added.");
-				}
+		void CreateTray() {
+			if (!SystemTray.isSupported()) {
+				System.out.println("SystemTray no es soportado");
+				return;
 			}
 
+			final PopupMenu popup = new PopupMenu();
+			final TrayIcon trayIcon = new TrayIcon(new ImageIcon("src//paquete//exit.png").getImage());
+			final SystemTray tray = SystemTray.getSystemTray();
+
+			CheckboxMenuItem setStart = new CheckboxMenuItem("Añadir al inicio del sistema");
+			MenuItem showItem = new MenuItem("Mostrar");
+			MenuItem exitItem = new MenuItem("Salir");
+
+			showItem.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setVisible(true);
+					setState(JFrame.NORMAL); // lo trae al frente
+				}
+			});
+			exitItem.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0);
+				}
+			});
+			// Add components to pop-up menu
+			popup.add(showItem);
+			popup.addSeparator();
+			popup.add(setStart);
+			popup.addSeparator();
+			popup.add(exitItem);
+			trayIcon.addMouseListener(new MouseAdapter() {
+
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if (arg0.getClickCount() == 1 && !isVisible()) {
+						mimarcoN.mostrar();
+					}
+				}
+			});
+			trayIcon.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setVisible(true);
+					setState(JFrame.NORMAL); // lo trae al frente
+				}
+			});
+
+			trayIcon.setPopupMenu(popup);
+			try {
+				tray.add(trayIcon);
+			} catch (AWTException e) {
+				System.out.println("TrayIcon could not be added.");
+			}
 		}
 
 		private class Agregar implements ActionListener {
-
 			@Override
-			public void actionPerformed(ActionEvent e) {
 
+			public void actionPerformed(ActionEvent e) {
 				String extension = Campo_Extension.getText();
 				k: if (!extension.isEmpty()) {
 					Iterator<String> ite = misextenciones.iterator();
