@@ -29,6 +29,8 @@ public class ServerThread extends Thread{
         try {
             System.out.println("ServerOSD: init run ServerThread process ...");
             sleep(time);
+            System.out.println("el nid en quitar con tiempo es: "+nid);
+            
             server.remove(nid);
         } catch (InterruptedException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);

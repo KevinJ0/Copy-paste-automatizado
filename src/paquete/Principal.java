@@ -1,40 +1,28 @@
 package paquete;
 
 import java.awt.*;
-import java.awt.RenderingHints.Key;
 import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.RoundRectangle2D;
-import java.awt.peer.CheckboxMenuItemPeer;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.Timer;
-
-import javax.jws.soap.InitParam;
-import javax.print.attribute.AttributeSetUtilities;
 import javax.swing.*;
-import javax.swing.plaf.FileChooserUI;
-import javax.swing.plaf.ProgressBarUI;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
-
 import java.awt.TrayIcon.MessageType;
 
 public class Principal {
 
 	public static void main(String[] args) {
 
-//		try {
-//			try {
-//				UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
-//			} catch (UnsupportedLookAndFeelException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		 try {
+		 try {
+		 UIManager.setLookAndFeel(new
+		 javax.swing.plaf.nimbus.NimbusLookAndFeel());
+		 } catch (UnsupportedLookAndFeelException e) {
+		 // TODO Auto-generated catch block
+		 e.printStackTrace();
+		 }
+		 } catch (Exception e) {
+		 // TODO Auto-generated catch block
+		 e.printStackTrace();
+		 }
 
 		Marco M = new Marco();
 		// M.setVisible(true);
@@ -64,16 +52,7 @@ public class Principal {
 		private static int ultimo;
 		private static int carga;
 		private static double cargad = 0.0;
-		private Timer timer = new Timer("mitimer", true);
-		private TimerTask mitarea = new TimerTask() {
-			@Override
-			public void run() {
-				System.out.println(System.nanoTime());
-			}
-			// if(!en_proceso)
-			// botonEmpezar.doClick();
-			// }
-		};
+
 		// private int i4 = 0;
 		// private boolean limite;
 		private static marcoN mimarcoN; // cuadro de carga en proceso
@@ -81,8 +60,6 @@ public class Principal {
 		// private int tamanoScroll = 0;
 		// private int cont = 0;
 		// private int largo = 0;
-		private boolean run;
-		private boolean run1;
 		private File direcP;
 		private File direcC;
 		private static JButton cancelar;
@@ -113,6 +90,7 @@ public class Principal {
 		private CheckboxMenuItem setStart = new CheckboxMenuItem("Iniciar sin visibilidad");
 		private MenuItem showItem = new MenuItem("Mostrar");
 		private PopupMenu DtimeMenu = new PopupMenu("Configurar el lapso de tiempo");
+		private static boolean automatic;
 
 		static void quitBarraCarga(boolean b) {
 			// //System.out.println("paso pr aca");
@@ -251,9 +229,10 @@ public class Principal {
 								direcC = new File(campoEscogerC.getText().trim());
 								if (direcC.isDirectory()) {
 									if (direcC.canRead()) {
+										System.out.println(automatic + " esto es");
+										copi.mostrarmsj(automatic);
 
 										resultado = copi.comenzar(direcC, misextenciones, 'c');
-
 										listArchivos = copi.getListFile();
 
 									} else {
@@ -281,7 +260,6 @@ public class Principal {
 											if (direcP.canWrite()) {
 												copi.setdirecP(direcP);
 												copi.run();
-
 											} else {
 												botonEmpezar.setEnabled(true);
 
@@ -297,7 +275,9 @@ public class Principal {
 													"El directorio en donde se van a copiar los archivos no es valido.",
 													"Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 										}
-									}
+									} else
+										botonEmpezar.setEnabled(true);
+
 								} else {
 									botonEmpezar.setEnabled(true);
 									if (copi.dameresultado()) {
@@ -515,7 +495,7 @@ public class Principal {
 				if (P.containsKey("Inicio")) {
 					if (P.getProperty("Inicio").equals("2"))
 						setVisible(true);
-					System.out.println("lo oontiene: " + P.getProperty("Inicio"));
+					System.out.println("lo oontiene en inicio : " + P.getProperty("Inicio"));
 
 				} else {
 					setVisible(true);
@@ -535,30 +515,50 @@ public class Principal {
 				});
 
 				// ------------------------------------------------------------------------------------------------
+				try {
+					Object[] obj = P.keySet().toArray();
+					Arrays.sort(obj);
+					if (obj.length != 0) {
+						for (Object e : obj) {
+							if (!String.valueOf(e).equalsIgnoreCase("DirectorioC")
+									&& !String.valueOf(e).equalsIgnoreCase("DirectorioP")
+									&& !String.valueOf(e).equalsIgnoreCase("Inicio")
+									&& !String.valueOf(e).equalsIgnoreCase("Tiempo")
+									&& !String.valueOf(e).equalsIgnoreCase("Trabajar_sin_molestias")) {
+								// System.out.println(misextenciones.size());
+								String extension = P.getProperty(String.valueOf(e).trim());
+								String id = String.valueOf(e).trim();
+								laminaE nuevaLamina = new laminaE(extension, id);
+								Lamina_Central.add(nuevaLamina);
+								setLaminas.add(nuevaLamina);
+								try {
+									Lamina_Central.updateUI();
+								} catch (NullPointerException e2) {
+								}
+								misextenciones.setFormato(extension);
 
-				Object[] obj = P.keySet().toArray();
+							}
 
-				Arrays.sort(obj);
-
-				for (Object e : obj) {
-					if (!String.valueOf(e).equalsIgnoreCase("DirectorioC")
-							&& !String.valueOf(e).equalsIgnoreCase("DirectorioP")
-							&& !String.valueOf(e).equalsIgnoreCase("Inicio")
-							&& !String.valueOf(e).equalsIgnoreCase("Tiempo")) {
-						// System.out.println(misextenciones.size());
-						String extension = P.getProperty(String.valueOf(e).trim());
-						String id = String.valueOf(e).trim();
-						laminaE nuevaLamina = new laminaE(extension, id);
-						Lamina_Central.add(nuevaLamina);
-						setLaminas.add(nuevaLamina);
-						try {
-							Lamina_Central.updateUI();
-						} catch (NullPointerException e2) {
 						}
-						misextenciones.setFormato(extension);
-
 					}
+				} catch (Exception er) {
+					JOptionPane
+							.showConfirmDialog(
+									null, "Error", "Error al crear los formatos guardados. " + er.getLocalizedMessage()
+											+ " " + er.getMessage(),
+									JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+					er.printStackTrace();
 
+				}
+
+				if (P.containsKey("Trabajar_sin_molestias")) {
+					if (P.getProperty("Trabajar_sin_molestias").equals("1"))
+						automatic = true;
+
+					System.out.println("lo que Contiene aotometic: " + P.getProperty("Trabajar_sin_molestias"));
+
+				} else {
+					automatic = false;
 				}
 
 			} catch (Exception e) {
@@ -597,17 +597,14 @@ public class Principal {
 					ahora = System.nanoTime();
 					diferencia = ahora - ini;
 
-//					while (diferencia < tiempo) {
-	//					ahora = System.nanoTime();
-		//				diferencia = ahora - ini;
-			//		}
-				try {
-					sleep(tiempo);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-					if (!en_proceso && botonEmpezar.isEnabled() && !campoEscogerP.getText().isEmpty() && !campoEscogerC.getText().isEmpty()) {
+					try {
+						sleep(tiempo);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (!en_proceso && botonEmpezar.isEnabled() && !campoEscogerP.getText().isEmpty()
+							&& !campoEscogerC.getText().isEmpty()) {
 						System.out.println("Inicia el proceso automatico");
 						botonEmpezar.doClick();
 					}
@@ -707,11 +704,13 @@ public class Principal {
 				barraN.setForeground(Color.green);
 				completado = true;
 				detener.setEnabled(false);
+			if (!automatic){
 				if (!mimarcoN.isVisible()) {
+					
 					nicon.notify.core.Notification.show("Completado", "Las copias se han finalizado correctamente",
 							nicon.notify.core.Notification.NICON_LIGHT_THEME, true, 15000);
 				}
-
+			}
 			}
 
 			void SinProceso() {
@@ -930,8 +929,25 @@ public class Principal {
 				setStart.addItemListener(new ItemListener() {
 					@Override
 					public void itemStateChanged(ItemEvent arg0) {
-						// //System.out.println(P.getProperty("Inicio"));
+						//
+						System.out.println(P.getProperty("Inicio"));
 						P.setProperty("Inicio", String.valueOf(arg0.getStateChange()));
+						try {
+							P.store(new FileWriter(System.getProperty("user.dir") + System.getProperty("file.separator")
+									+ "Config.ini"), null);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
+				CheckboxMenuItem workAItem = new CheckboxMenuItem("Trabajar sin molestias");
+				workAItem.addItemListener(new ItemListener() {
+					@Override
+					public void itemStateChanged(ItemEvent arg01) {
+
+						P.setProperty("Trabajar_sin_molestias", String.valueOf(arg01.getStateChange()));
+						automatic = !automatic;
 						try {
 							P.store(new FileWriter(System.getProperty("user.dir") + System.getProperty("file.separator")
 									+ "Config.ini"), null);
@@ -953,26 +969,30 @@ public class Principal {
 					if (P.getProperty("Tiempo").equals("10 minutos")) {
 						tiempo = 10l;
 						minuto_10.setState(true);
-					}
-					if (P.getProperty("Tiempo").equals("30 minutos")) {
+					} else if (P.getProperty("Tiempo").equals("30 minutos")) {
 						tiempo = 30l;
 						minuto_30.setState(true);
-					}
-					if (P.getProperty("Tiempo").equals("1 hora")) {
+					} else if (P.getProperty("Tiempo").equals("1 hora")) {
 						tiempo = 60l;
 						hora_1.setState(true);
-					}
-					if (P.getProperty("Tiempo").equals("2 horas")) {
+					} else if (P.getProperty("Tiempo").equals("2 horas")) {
 						hora_2.setState(true);
 						tiempo = 120l;
+					} else {
+						tiempo = 90l;
 					}
+				} else {
+					tiempo = 90l;
 				}
 
-				System.out.println("lo oontiene" + P.getProperty("Tiempo"));
+				System.out.println("lo contiene tiempo " + tiempo);
 				System.out.println("cada_: " + tiempo + " minutos");
 
 				mit.setTiempo(tiempo);
+
 				mit.start();
+				if (tiempo == 90l)
+					mit.suspend();
 
 				showItem.addActionListener(new ActionListener() {
 
@@ -998,12 +1018,19 @@ public class Principal {
 						System.exit(0);
 					}
 				});
+				if (P.containsKey("Trabajar_sin_molestias")) {
+					workAItem.setState((P.getProperty("Trabajar_sin_molestias").equals("1") ? true : false));
 
+					// //System.out.println("lo oontiene:
+					// "+P.getProperty("Inicio"));
+
+				}
 				// Add components to pop-up menu
 				popup.add(showItem);
 				popup.addSeparator();
 				popup.add(setStart);
 				popup.addSeparator(); // cmd talvez. no pude.
+				popup.add(workAItem);
 				popup.add(DtimeMenu);
 				popup.addSeparator(); // cmd talvez. no pude.
 				popup.add(exitItem);
@@ -1020,7 +1047,6 @@ public class Principal {
 							}
 							mimarcoN.mostrar();
 							completado = false;
-
 						}
 					}
 				});

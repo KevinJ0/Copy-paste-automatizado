@@ -23,6 +23,7 @@ public class Copiar {
 	private Hilos H1;
 	private boolean detener;
 	private boolean all = false;
+	private static boolean automatic = false;
 	private int resultado = 2;
 	// static volatile Hilos H1;
 
@@ -60,6 +61,7 @@ public class Copiar {
 	}
 
 	boolean comenzar(File directorio, Listformato listado_format, char CoP) {
+
 		boolean comienza = false;
 		ArrayList<File> listarchivosTEMP = new ArrayList<File>();
 		rompe: if (directorio != null && directorio.canRead()) {
@@ -69,15 +71,23 @@ public class Copiar {
 			// existe
 			int repetir = listado_format.size();
 			listformat = listado_format;
+
 			if (repetir == 0 && CoP == 'c') {
-				resultado = JOptionPane.showConfirmDialog(null, "¿Desea copiar todos los archivos de este directorio?",
-						"No hay formatos para filtrar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+				if (!isAtomatic()) {
+					resultado = JOptionPane.showConfirmDialog(null,
+							"¿Desea copiar todos los archivos de este directorio?", "No hay formatos para filtrar",
+							JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+				} else
+					resultado = JOptionPane.OK_OPTION;
+
 				if (resultado == JOptionPane.OK_OPTION) {
 				} else {
 					comienza = false;
 					break rompe;
 				}
 			}
+			System.out.println("llego hasta aquí: "+CoP);
 
 			temp = directorio.listFiles();
 			all = true;
@@ -88,19 +98,18 @@ public class Copiar {
 			for (int i = 0; i < repetir; i++) {
 				temp = directorio.listFiles(new Filtro(listado_format.get(i)));
 
-
 				if (CoP == 'c') {
 					int npeso = 67;
-					
+
 					if (temp.length == 0) {
-					
-						formatosNoexistentes = formatosNoexistentes + " [" +listado_format.get(i).substring(1).trim()
+
+						formatosNoexistentes = formatosNoexistentes + " [" + listado_format.get(i).substring(1).trim()
 								+ "] ";
 
-						//if (formatosNoexistentes.length() > npeso) {
-						//	formatosNoexistentes = formatosNoexistentes + "\n";
-					//		npeso = formatosNoexistentes.length() + 67;
-						//}
+						// if (formatosNoexistentes.length() > npeso) {
+						// formatosNoexistentes = formatosNoexistentes + "\n";
+						// npeso = formatosNoexistentes.length() + 67;
+						// }
 
 					}
 				}
@@ -126,18 +135,20 @@ public class Copiar {
 			}
 
 			// --------------------------------------------------------------------------------------------------------------------
-if (CoP == 'c'){
-			if (!formatosNoexistentes.trim().isEmpty()) {
-				System.out.println("paso por aca");
-				nicon.notify.core.Notification.show("Informe",
-						"No se pudo encontrar los archivos con formato: " + "\n" + dameformatos(),
-						nicon.notify.core.Notification.NICON_LIGHT_THEME, nicon.notify.core.Notification.INFO_ICON,
-						true, 15000);
-				formatosNoexistentes = "";
+			if (CoP == 'c') {
+				if (!formatosNoexistentes.trim().isEmpty()) {
+					if (!isAtomatic()) {
+						System.out.println("paso por aca");
+						nicon.notify.core.Notification.show("Informe",
+								"No se pudo encontrar los archivos con formato: " + "\n" + dameformatos(),
+								nicon.notify.core.Notification.NICON_LIGHT_THEME,
+								nicon.notify.core.Notification.INFO_ICON, true, 11000);
+					}
+					formatosNoexistentes = "";
 
+				}
+				// --------------------------------------------------------------------------------------------------------------------
 			}
-			// --------------------------------------------------------------------------------------------------------------------
-}
 			if (all) {
 
 				for (File e : temp) {
@@ -176,6 +187,16 @@ if (CoP == 'c'){
 			comienza = true;
 
 		return comienza;
+	}
+
+	void mostrarmsj(boolean a) {
+		automatic = a;
+		System.out.println("automatic cambio a :  " + automatic);
+
+	}
+
+	boolean isAtomatic() {
+		return automatic;
 	}
 
 	boolean dameresultado() {

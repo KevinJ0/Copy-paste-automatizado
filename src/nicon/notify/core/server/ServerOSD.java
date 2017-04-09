@@ -101,7 +101,7 @@ public class ServerOSD{
                         stackThread.put(nid, serThread);
                     }
                 notify.setLocation(getDimensionDevice().width-notify.getWidth()-5,setVerticalPosition());
-                System.out.println("ServerOSD: Notification is Launched nid:"+nid);
+                System.out.println("ServerOSD: Notification is Launched nid: "+nid);
                 notify.setVisible(true);
                 prev_vertical_position = notify.getY();
             }
@@ -118,13 +118,16 @@ public class ServerOSD{
         ServerThread thrd;
         if(stackServer.containsKey(nid)){
             notify = (DesktopNotify) stackServer.get(nid);
+            
             if(notify.isVisible()){
-                notify.dispose();
+                
+            	notify.dispose();
                 thrd = (ServerThread) stackThread.get(nid);
-                thrd.killThread();
                 stackServer.remove(nid);
                 stackThread.remove(nid);
                 System.out.println("ServerOSD: notification with nid: "+nid+" remove successfully ...");
+                thrd.killThread();
+
             }
         }
     }
