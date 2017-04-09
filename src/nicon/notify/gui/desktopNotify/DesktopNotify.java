@@ -90,7 +90,7 @@ public class DesktopNotify extends JDialog implements ActionListener{
         this.theme=NiconDarkTheme.getInstance();        
         setSize(380,98);
         setUndecorated(true);  
-        setAlwaysOnTop(true);
+      //  setAlwaysOnTop(true);
 
         setAutoRequestFocus(true);
         setResizable(false);

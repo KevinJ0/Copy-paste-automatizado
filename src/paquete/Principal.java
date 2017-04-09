@@ -24,18 +24,17 @@ public class Principal {
 
 	public static void main(String[] args) {
 
-		// try {
-		// try {
-		// UIManager.setLookAndFeel(new
-		// javax.swing.plaf.nimbus.NimbusLookAndFeel());
-		// } catch (UnsupportedLookAndFeelException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+//		try {
+//			try {
+//				UIManager.setLookAndFeel(new javax.swing.plaf.nimbus.NimbusLookAndFeel());
+//			} catch (UnsupportedLookAndFeelException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		Marco M = new Marco();
 		// M.setVisible(true);
@@ -91,8 +90,8 @@ public class Principal {
 		private JButton botonEscogerC;
 		private JButton botonEscogerP;
 		private static JButton botonEmpezar;
-		private JTextField campoEscogerC = new JTextField(35);
-		private JTextField campoEscogerP = new JTextField(35);
+		private static JTextField campoEscogerC = new JTextField(35);
+		private static JTextField campoEscogerP = new JTextField(35);
 		private JLabel Leibol_agregar;
 		private JTextField Campo_Extension;
 		private static JPanel Lamina_Sur = new JPanel(new GridLayout(4, 1));
@@ -207,7 +206,11 @@ public class Principal {
 
 		public Marco() {
 			try {
-				setIconImage(new ImageIcon("src//paquete//icono.png").getImage());
+
+				// setIconImage(new
+				// ImageIcon("src//paquete//icono.png").getImage());
+				setIconImage(new ImageIcon(getClass().getResource("/paquete/icono.png")).getImage());
+
 				// setUndecorated(true);
 				setTitle("C&P's");
 				// Shape forma = new Ellipse2D.Double(33, 2, 444, 404);
@@ -229,7 +232,8 @@ public class Principal {
 				mimarcoN = new marcoN();
 				barra.setForeground(Color.DARK_GRAY);
 				barraN.setForeground(Color.DARK_GRAY);
-				CreateTray trayIcon = new CreateTray(new ImageIcon("src//paquete//iconoTray.png").getImage());
+				CreateTray trayIcon = new CreateTray(
+						new ImageIcon(getClass().getResource("/paquete/iconoTray.png")).getImage());
 				trayIcon.displayMessage("Iniciado", "Ya estoy listo para realizar las copias :D", MessageType.INFO);
 				Font mifont = new Font("Verdana", Font.PLAIN, 18);
 				setLayout(new BorderLayout());
@@ -277,7 +281,7 @@ public class Principal {
 											if (direcP.canWrite()) {
 												copi.setdirecP(direcP);
 												copi.run();
-												
+
 											} else {
 												botonEmpezar.setEnabled(true);
 
@@ -507,13 +511,16 @@ public class Principal {
 					}
 				} else
 					System.out.println("no exite el directorioC");
+
 				if (P.containsKey("Inicio")) {
 					if (P.getProperty("Inicio").equals("2"))
 						setVisible(true);
-					// //System.out.println("lo oontiene:
-					// "+P.getProperty("Inicio"));
+					System.out.println("lo oontiene: " + P.getProperty("Inicio"));
 
+				} else {
+					setVisible(true);
 				}
+
 				addWindowListener(new WindowAdapter() {
 					@Override
 					public void windowIconified(WindowEvent arg0) {
@@ -536,7 +543,8 @@ public class Principal {
 				for (Object e : obj) {
 					if (!String.valueOf(e).equalsIgnoreCase("DirectorioC")
 							&& !String.valueOf(e).equalsIgnoreCase("DirectorioP")
-							&& !String.valueOf(e).equalsIgnoreCase("Inicio")) {
+							&& !String.valueOf(e).equalsIgnoreCase("Inicio")
+							&& !String.valueOf(e).equalsIgnoreCase("Tiempo")) {
 						// System.out.println(misextenciones.size());
 						String extension = P.getProperty(String.valueOf(e).trim());
 						String id = String.valueOf(e).trim();
@@ -569,7 +577,8 @@ public class Principal {
 			long diferencia = ahora - ini;
 
 			public tempo() {
-				setDaemon(true);
+				setPriority(Thread.MIN_PRIORITY);
+				setDaemon(false);
 			}
 
 			void reset() {
@@ -578,7 +587,7 @@ public class Principal {
 			}
 
 			public void setTiempo(long newtiempo) {
-				this.tiempo = newtiempo * 1000000000l; // 1 minute
+				this.tiempo = newtiempo * 60000; // 1 minute
 			}
 
 			@Override
@@ -588,11 +597,17 @@ public class Principal {
 					ahora = System.nanoTime();
 					diferencia = ahora - ini;
 
-					while (diferencia < tiempo) {
-						ahora = System.nanoTime();
-						diferencia = ahora - ini;
-					}
-					if (!en_proceso) {
+//					while (diferencia < tiempo) {
+	//					ahora = System.nanoTime();
+		//				diferencia = ahora - ini;
+			//		}
+				try {
+					sleep(tiempo);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					if (!en_proceso && botonEmpezar.isEnabled() && !campoEscogerP.getText().isEmpty() && !campoEscogerC.getText().isEmpty()) {
 						System.out.println("Inicia el proceso automatico");
 						botonEmpezar.doClick();
 					}
