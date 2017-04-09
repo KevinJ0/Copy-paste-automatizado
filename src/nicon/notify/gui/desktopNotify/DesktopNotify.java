@@ -91,6 +91,8 @@ public class DesktopNotify extends JDialog implements ActionListener{
         setSize(380,98);
         setUndecorated(true);  
         setAlwaysOnTop(true);
+
+        setAutoRequestFocus(true);
         setResizable(false);
         init();        
         setDesktopInterface();
@@ -318,7 +320,7 @@ public class DesktopNotify extends JDialog implements ActionListener{
     private void setDesktopInterface(){
         
         if(ev.getTipeMessage()==Notification.DEFAULT_MESSAGE){
-            setIconNotify(new ImageIcon(getClass().getResource(config.getNitruxIconsPath()+"NiconDefault.png")));
+            setIconNotify(new ImageIcon(getClass().getResource(config.getNitruxIconsPath()+"NiconOK.png")));
             jlTitle.setForeground(new Color(Integer.parseInt(theme.getTitleForeground(), 16)));
         }
         
